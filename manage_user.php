@@ -12,7 +12,7 @@ $new_pass = "";
 // Include MySQLi connection with SSL
 include('con.php');
 
-if(isset($_GET['id']) && $_GET['id'] > 0){
+if (isset($_GET['id']) && $_GET['id'] > 0) {
     $label = "Edit";
     $id = get_safe_value($_GET['id']);
 
@@ -21,7 +21,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
     $stmt->execute();
     $result = $stmt->get_result();
 
-    if($result->num_rows == 0){
+    if ($result->num_rows == 0) {
         redirect('users.php');
         die();
     }
@@ -34,34 +34,43 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
     $stmt->close();
 }
 
-if(isset($_POST['submit'])){
+if (isset($_POST['submit'])) {
     $username = get_safe_value($_POST['username']);
     $password = get_safe_value($_POST['password']);
 
     $type = "add";
     $sub_sql = "";
-    if(isset($_GET['id']) && $_GET['id'] > 0){
+    if (isset($_GET['id']) && $_GET['id'] > 0) {
         $type = "edit";
         $sub_sql = " AND id != ?";
     }
 
-    $stmt = $con->prepare("SELECT * FROM users WHERE username = ?" . $sub_sql);
-    $stmt->bind_param("s", $username);
-    if(isset($_GET['id']) && $_GET['id'] > 0){
-        $stmt->bind_param("i", $id);
+    // Prepare the SQL query to check if username exists
+    $query = "SELECT * FROM users WHERE username = ?" . $sub_sql;
+    $stmt = $con->prepare($query);
+
+    if ($type == "edit") {
+        $stmt->bind_param("si", $username, $id);
+    } else {
+        $stmt->bind_param("s", $username);
     }
+    
     $stmt->execute();
     $result = $stmt->get_result();
 
-    if($result->num_rows > 0){
+    if ($result->num_rows > 0) {
         $msg = "Username already exists";
     } else {
-        if($type == "edit"){
+        if ($type == "edit") {
+            // Only hash the password if it has changed
+            if ($password != $row['password']) {
+                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            } else {
+                $hashed_password = $password;
+            }
             $stmt = $con->prepare("UPDATE users SET username = ?, password = ? WHERE id = ?");
-            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
             $stmt->bind_param("ssi", $username, $hashed_password, $id);
             $stmt->execute();
-            $new_pass = $password;
             redirect('users.php');
         } else {
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
@@ -88,7 +97,7 @@ $con->close();
       <div class="container-fluid">
          <div class="row">
             <div class="col-lg-12">
-               <h2><?php echo $label?> User</h2>
+               <h2><?php echo $label ?> User</h2>
                <a href="users.php">Back</a>
                <div class="card">
                   <div class="card-body card-block">
