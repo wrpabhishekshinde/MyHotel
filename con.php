@@ -6,5 +6,5 @@ mysqli_real_connect($con, "frtdbserver74.mysql.database.azure.com", "gsshinde", 
 if (!$con) {
     die("Connection failed: " . mysqli_connect_error());
   }
-  echo "Connected successfully";
+  //echo "Connected successfully";
 ?>
