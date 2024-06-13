@@ -54,7 +54,7 @@ if (isset($_POST['login'])) {
     <title>Login</title>
 
     <!-- Bootstrap CSS-->
-    <link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
+    <link href="bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
     <!-- Main CSS-->
     <link href="css/theme.css" rel="stylesheet" media="all">
 
@@ -92,10 +92,10 @@ if (isset($_POST['login'])) {
     </div>
 
     <!-- Jquery JS-->
-    <script src="vendor/jquery-3.2.1.min.js"></script>
+    <script src="jquery-3.2.1.min.js"></script>
     <!-- Bootstrap JS-->
-    <script src="vendor/bootstrap-4.1/popper.min.js"></script>
-    <script src="vendor/bootstrap-4.1/bootstrap.min.js"></script>
+    <script src="bootstrap-4.1/popper.min.js"></script>
+    <script src="bootstrap-4.1/bootstrap.min.js"></script>
     <!-- Main JS-->
     <script src="js/main.js"></script>
 
