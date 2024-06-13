@@ -1,4 +1,5 @@
-<?php  
+<?php
+session_start();
 include('header.php');
 include('con.php'); // Include the SSL connection setup
 checkUser();
