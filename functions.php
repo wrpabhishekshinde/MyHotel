@@ -1,4 +1,5 @@
 <?php
+session_start();
 function prx($data){
 	echo '<pre>';
 	print_r($data);
