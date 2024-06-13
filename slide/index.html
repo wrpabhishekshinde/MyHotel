@@ -1,0 +1,82 @@
+<html lang="en">
+<head>
+    
+<style>
+    *{
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+    }
+    main{
+        width: 30%;
+        height: 200px;
+        margin-left: 60%; /* Adjust this value to move the slideshow slightly towards the middle */
+        margin-right: auto;
+        margin-top: 450px;
+        box-shadow: 0px 0px 3px grey;
+        position: relative;
+        overflow: hidden;
+    }
+    .slide{
+        width: 100%;
+        height: 100%;
+        transition: transform 1s;
+        position: absolute;
+    }
+    .nav{
+    
+        margin-left: 70%;
+        margin-top: 15px;
+    }
+    .nav button{
+        font-size: 20px;
+        padding: 10px;
+    }
+</style>
+    
+</head>
+<body>
+    <main>
+        <img src="1.jpeg" class="slide" alt="image 1">
+        <img src="2.jpeg" class="slide" alt="image 2">
+        <img src="3.jpeg" class="slide" alt="image 3">
+        <img src="5.jpeg" class="slide" alt="image 4">
+        <script src="index.js"></script>
+    </main>
+
+    <div class="nav">
+        <button onclick="goPrev()">
+            prev
+        </button>
+
+        <button onclick="goNext()">
+            next
+        </button>
+    </div>
+
+    <script>
+        let currentIndex = 0;
+const slides = document.querySelectorAll('.slide');
+
+function showSlide(index) {
+    slides.forEach((slide, i) => {
+        slide.style.left = (i - index) * 100 + '%';
+    });
+}
+
+function goNext() {
+    currentIndex = (currentIndex + 1) % slides.length;
+    showSlide(currentIndex);
+}
+
+function goPrev() {
+    currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+    showSlide(currentIndex);
+}
+
+// Initialize the slideshow
+showSlide(currentIndex);
+
+    </script>
+</body>
+</html>
