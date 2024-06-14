@@ -1,6 +1,6 @@
 <?php
 session_start(); // Ensure the session is started
-include('config.php');
+include('con.php');
 include('functions.php');
 
 // Unset specific session variables
