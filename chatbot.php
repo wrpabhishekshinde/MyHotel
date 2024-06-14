@@ -9,6 +9,7 @@ userArea();
     setTitle("Dashboard");
     selectLink('dashboard_link');
 </script>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,6 +18,7 @@ userArea();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chatbot</title>
     <style>
+        /* Existing styles for your chat button and dialog */
         body {
             position: relative;
             min-height: 100vh;
@@ -160,6 +162,86 @@ userArea();
                 width: auto;
             }
         }
+
+        /* Additional styles for Azure Web Chat */
+        #healthBotContainer {
+            width: 100%;
+            height: 600px;
+            max-width: 500px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px; /* Adjust spacing */
+        }
+
+        .webchat__basic-transcript {
+            background-color: #f8f9fa; /* Light grey background */
+            padding: 10px;
+            overflow-y: auto; /* Enable scrolling */
+            height: 100%; /* Full height */
+        }
+
+        .webchat__bubble {
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin: 6px 0;
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+
+        .webchat__bubble_from_user {
+            background-color: #007bff; /* Blue */
+            color: white;
+            align-self: flex-end;
+        }
+
+        .webchat__bubble_from_bot {
+            background-color: #f8f9fa; /* Light grey */
+            color: black;
+            align-self: flex-start;
+        }
+
+        .webchat__input-box {
+            border-top: 1px solid #ddd;
+            padding: 10px;
+            background-color: #f8f9fa; /* Light grey */
+        }
+
+        .webchat__send-box-button {
+            background-color: #007bff; /* Blue */
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .webchat__typing-indicator {
+            background-color: #f8f9fa; /* Light grey */
+            padding: 6px;
+            display: flex;
+            align-items: center;
+        }
+
+        .webchat__typing-indicator__ellipsis {
+            font-size: 24px;
+            line-height: 0.8;
+            margin-right: 6px;
+            animation: ellipsis-animation 1s infinite;
+        }
+
+        @keyframes ellipsis-animation {
+            0% {
+                opacity: 0.1;
+            }
+            20% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0.1;
+            }
+        }
     </style>
 </head>
 
@@ -182,7 +264,35 @@ userArea();
         </div>
     </div>
 
+    <!-- Azure Web Chat Container -->
+    <div id="healthBotContainer"></div>
+
+    <!-- Azure Web Chat Script -->
+    <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
     <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            fetch('getSecret.php')
+                .then(response => response.json())
+                .then(data => {
+                    const styleSet = window.WebChat.createStyleSet({
+                        bubbleBackground: '#f8f9fa', // Light grey background for bubbles
+                        bubbleFromUserBackground: '#007bff', // Blue background for user messages
+                        sendBoxButtonBackground: '#007bff', // Blue background for send button
+                        sendBoxButtonColor: 'white', // White text for send button
+                        typingIndicatorColor: '#007bff' // Blue color for typing indicator
+                    });
+
+                    window.WebChat.renderWebChat({
+                        directLine: window.WebChat.createDirectLine({
+                            secret: data.secret
+                        }),
+                        styleSet
+                    }, document.getElementById('healthBotContainer'));
+                })
+                .catch(error => console.error('Error fetching the Direct Line secret:', error));
+        });
+
+        // Your existing JavaScript for handling the chat button and dialog
         document.addEventListener('DOMContentLoaded', () => {
             const chatButton = document.querySelector('.chat-button');
             const chatDialog = document.getElementById('chatDialog');
@@ -215,62 +325,4 @@ userArea();
                 const messageElem = document.createElement('div');
                 messageElem.textContent = message;
                 messageElem.className = 'message ' + type;
-                messages.appendChild(messageElem);
-                messages.scrollTop = messages.scrollHeight;
-            }
-
-            async function fetchResponse(question) {
-                try {
-                    // Simulate a delay of 1-3 seconds
-                    const delay = Math.floor(Math.random() * 2000) + 500;
-                    await new Promise(resolve => setTimeout(resolve, delay));
-
-                    const response = await fetch('fetch_answer.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ question }),
-                    });
-
-                    const data = await response.json();
-                    if (data.answer) {
-                        displayBotTypingAnimation();
-                        setTimeout(() => {
-                            hideBotTypingAnimation();
-                            displayMessage(data.answer, 'bot');
-                        }, 1000); // Delay for typing animation
-                    } else {
-                        displayMessage("I'm sorry, I don't have an answer for that.", 'bot');
-                    }
-                } catch (error) {
-                    console.error('Error fetching answer:', error);
-                    displayMessage("An error occurred while fetching the answer.", 'bot');
-                }
-            }
-
-            function displayBotTypingAnimation() {
-                const messages = document.getElementById('chatMessages');
-                const typingAnimation = document.createElement('div');
-                typingAnimation.textContent = 'Typing...';
-                typingAnimation.className = 'typing-animation';
-                messages.appendChild(typingAnimation);
-                messages.scrollTop = messages.scrollHeight;
-            }
-
-            function hideBotTypingAnimation() {
-                const messages = document.getElementById('chatMessages');
-                const typingAnimation = messages.querySelector('.typing-animation');
-                if (typingAnimation) {
-                    messages.removeChild(typingAnimation);
-                }
-            }
-        });
-    </script>
-</body>
-
-</html>
-
-<?php
-include('footer.php');
-?>
+                messages.appendChild(messageElem
