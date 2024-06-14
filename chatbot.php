@@ -34,7 +34,7 @@ userArea();
             align-items: center;
             height: 100%;
             width: 100%;
-            button:40px;
+            button:-80px;
         }
         #azurebotContainer {
             width: 100%;
