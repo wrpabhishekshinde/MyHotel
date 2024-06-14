@@ -25,13 +25,16 @@ userArea();
             justify-content: center;
             align-items: center;
             background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
         }
         #azurebotContainer {
             width: 100%;
-            height: 600px;
+            height: 400px;
             max-width: 500px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
         }
     </style>
 </head>
