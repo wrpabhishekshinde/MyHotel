@@ -1,11 +1,11 @@
 <?php
 session_start();
 
-// Include database connection and helper functions
-include('con.php');
-include('header.php');
-checkUser();
-userArea();
+// Include necessary files
+include('con.php'); // MySQLi connection
+include('header.php'); // Header file with common elements
+checkUser(); // Function to check if user is logged in
+userArea(); // Function to display user-specific area
 
 $msg = "";
 $category_id = "";
@@ -19,8 +19,8 @@ if (!isset($_SESSION['UID'])) {
     redirect('login.php'); // Redirect to login page if not logged in
 }
 
-// Process form submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     $category_id = get_safe_value($_POST['category_id']);
     $amount = get_safe_value($_POST['amount']);
     $details = get_safe_value($_POST['details']);
@@ -28,31 +28,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $added_on = date('Y-m-d h:i:s');
     $added_by = $_SESSION['UID'];
 
+    $type = "add";
     if (isset($_GET['id']) && $_GET['id'] > 0) {
-        // Edit existing income record
-        $label = "Edit";
+        $type = "edit";
         $id = get_safe_value($_GET['id']);
-        
-        // Check if income record belongs to current user
-        $stmt = $con->prepare("SELECT * FROM income WHERE id = ? AND added_by = ?");
-        $stmt->bind_param("ii", $id, $added_by);
-        $stmt->execute();
-        $result = $stmt->get_result();
+    }
 
-        if ($result->num_rows > 0) {
-            $stmt->close();
-            // Update income record
-            $stmt = $con->prepare("UPDATE income SET category_id = ?, amount = ?, details = ?, income_date = ? WHERE id = ?");
-            $stmt->bind_param("idsii", $category_id, $amount, $details, $income_date, $id);
-            $stmt->execute();
-            $stmt->close();
-            redirect('income.php');
-        } else {
-            $stmt->close();
-            redirect('income.php');
-        }
+    if ($type == "edit") {
+        // Update existing income record
+        $stmt = $con->prepare("UPDATE income SET category_id = ?, amount = ?, details = ?, income_date = ? WHERE id = ? AND added_by = ?");
+        $stmt->bind_param("idsisi", $category_id, $amount, $details, $income_date, $id, $added_by);
+        $stmt->execute();
+        $stmt->close();
+        redirect('income.php');
     } else {
-        // Add new income record
+        // Insert new income record
         $stmt = $con->prepare("INSERT INTO income (category_id, amount, details, income_date, added_on, added_by) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->bind_param("idsiss", $category_id, $amount, $details, $income_date, $added_on, $added_by);
         $stmt->execute();
@@ -65,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if (isset($_GET['id']) && $_GET['id'] > 0) {
     $label = "Edit";
     $id = get_safe_value($_GET['id']);
-    
+
     // Fetch income record
     $stmt = $con->prepare("SELECT * FROM income WHERE id = ? AND added_by = ?");
     $stmt->bind_param("ii", $id, $_SESSION['UID']);
@@ -82,10 +72,11 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         redirect('income.php');
     }
 
+    // Close statement
     $stmt->close();
 }
 
-// Close database connection
+// Close MySQLi connection
 $con->close();
 ?>
 
