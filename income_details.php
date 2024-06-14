@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('config.php'); // Assuming this file contains your database connection details
+include('con.php'); // Assuming this file contains your database connection details
 
 if (isset($_GET['id']) && $_GET['id'] > 0) {
     $id = $_GET['id'];
