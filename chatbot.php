@@ -16,6 +16,7 @@ userArea();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Azure FRT Bot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/perfect-scrollbar/1.5.5/css/perfect-scrollbar.min.css">
     <style>
         /* Add any custom styles here */
         body, html {
@@ -50,6 +51,7 @@ userArea();
         <div id="azurebotContainer"></div>
     </div>
     <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/perfect-scrollbar/1.5.5/perfect-scrollbar.min.js"></script>
     <script>
         window.addEventListener('DOMContentLoaded', function () {
             fetch('getSecret.php')
@@ -65,6 +67,8 @@ userArea();
                         }),
                         styleSet
                     }, document.getElementById('azurebotContainer'));
+
+                    new PerfectScrollbar('#azurebotContainer'); // Initialize PerfectScrollbar
                 })
                 .catch(error => console.error('Error fetching the Direct Line secret:', error));
         });
