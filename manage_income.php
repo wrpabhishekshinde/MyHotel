@@ -1,11 +1,9 @@
 <?php
 session_start();
-
-// Include necessary files
 include('con.php'); // MySQLi connection
-include('header.php'); // Header file with common elements
-checkUser(); // Function to check if user is logged in
-userArea(); // Function to display user-specific area
+include('header.php');
+checkUser();
+userArea();
 
 $msg = "";
 $category_id = "";
