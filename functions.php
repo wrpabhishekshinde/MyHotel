@@ -97,7 +97,7 @@ function userArea(){
 }
 
 // Ensure the connection file is included
-include_once('config.php');
+include_once('con.php');
 
 /**
  * Function to get the user's name by ID
