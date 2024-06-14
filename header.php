@@ -121,10 +121,10 @@ include('functions.php');
                             <a href="users.php">
                                 <i class="fas fa-user"></i>Users</a>
                         </li>
-                        <li id="chatbot_link">
+<!--                         <li id="chatbot_link">
                             <a href="add_qa.php">
                                 <i class="fas fa-plus-circle"></i>Q & A</a>
-                        </li>
+                        </li> -->
                     <?php } ?>
                     <li>
                         <a href="logout.php">
