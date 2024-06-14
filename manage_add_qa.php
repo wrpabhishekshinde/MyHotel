@@ -1,5 +1,6 @@
 <?php  
 session_start();
+include('con.php');
 include('header.php');
 checkUser();
 adminArea();
@@ -13,7 +14,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
     $id = get_safe_value($_GET['id']);
     
     // Initialize MySQLi connection with SSL
-    include('con.php');
+  //  include('con.php');
 
     $stmt = $con->prepare("SELECT * FROM qa WHERE id = ?");
     $stmt->bind_param("i", $id);
