@@ -1,17 +1,11 @@
 <?php
-session_start();
 include('header.php');
 checkUser();
 userArea();
 ?>
 
-<script>
-    setTitle("Dashboard");
-    selectLink('dashboard_link');
-</script>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -162,7 +156,6 @@ userArea();
         }
     </style>
 </head>
-
 <body>
     <!-- Chat Bot Button -->
     <button type="button" class="chat-button"><span class="fas fa-comments"></span> Chat with Us</button>
@@ -182,7 +175,48 @@ userArea();
         </div>
     </div>
 
+    <?php include('footer.php'); ?>
+
     <script>
+        const speechButton = document.getElementById('speechButton');
+
+        speechButton.addEventListener('click', () => {
+            startSpeechRecognition();
+        });
+
+        async function startSpeechRecognition() {
+            const subscriptionKey = 'YOUR_AZURE_SPEECH_SUBSCRIPTION_KEY';
+            const region = 'YOUR_AZURE_REGION';
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                const audioContext = new AudioContext();
+                const audioInput = audioContext.createMediaStreamSource(stream);
+                const recorder = new MediaRecorder(stream);
+
+                const speechRecognitionEndpoint = `https://${region}.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1`;
+                const headers = new Headers();
+                headers.append('Authorization', `Bearer ${subscriptionKey}`);
+                headers.append('Content-Type', 'audio/wav; codecs=audio/pcm; samplerate=16000');
+
+                recorder.ondataavailable = async function(event) {
+                    const audioData = event.data;
+                    const response = await fetch(speechRecognitionEndpoint, {
+                        method: 'POST',
+                        headers: headers,
+                        body: audioData
+                    });
+                    const result = await response.json();
+                    const transcript = result.DisplayText;
+                    sendMessage(transcript); // Send the transcribed text as a message
+                };
+
+                recorder.start();
+            } catch (error) {
+                console.error('Error accessing microphone:', error);
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const chatButton = document.querySelector('.chat-button');
             const chatDialog = document.getElementById('chatDialog');
@@ -255,7 +289,6 @@ userArea();
                 typingAnimation.textContent = 'Typing...';
                 typingAnimation.className = 'typing-animation';
                 messages.appendChild(typingAnimation);
-                messages.scrollTop = messages.scrollHeight;
             }
 
             function hideBotTypingAnimation() {
@@ -268,9 +301,4 @@ userArea();
         });
     </script>
 </body>
-
 </html>
-
-<?php
-include('footer.php');
-?>
