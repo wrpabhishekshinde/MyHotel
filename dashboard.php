@@ -16,18 +16,29 @@ userArea();
         <div class="container-fluid">
             <div class="row m-t-25">
                 <?php
-                $timeframes = ['today', 'yesterday', 'week', 'month', 'year', 'total'];
+                $timeframes = ['DAY', 'DAY', 'WEEK', 'MONTH', 'YEAR', 'YEAR'];
                 $labels = ["Today's Expense", "Yesterday's Expense", "This Week's Expense", "This Month's Expense", "This Year's Expense", "Total Expense"];
                 
                 // Initialize MySQLi connection with SSL
                 include('con.php');
 
+                if (!$con) {
+                    die("Connection failed: " . mysqli_connect_error());
+                }
+
                 for ($i = 0; $i < count($timeframes); $i++) {
+                    $interval = $i == 1 ? 'DAY' : $timeframes[$i]; // Special case for yesterday
+                    $intervalAmount = $i == 1 ? 1 : 1; // Special case for yesterday
                     $result = mysqli_query($con, "SELECT SUM(expense.price) AS total_price 
                                                   FROM expense 
                                                   JOIN category ON expense.category_id = category.id 
                                                   WHERE expense.added_by = '" . $_SESSION['UID'] . "' 
-                                                  AND expense.expense_date >= DATE_SUB(CURDATE(), INTERVAL 1 $timeframes[$i])");
+                                                  AND expense.expense_date >= DATE_SUB(CURDATE(), INTERVAL $intervalAmount $interval)");
+
+                    if (!$result) {
+                        echo "Error: " . mysqli_error($con);
+                        continue;
+                    }
 
                     $row = mysqli_fetch_assoc($result);
                     $total_expense = $row['total_price'] ?? 0;
