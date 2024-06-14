@@ -34,10 +34,11 @@ userArea();
             align-items: center;
             height: 100%;
             width: 100%;
+            button:40px;
         }
         #azurebotContainer {
             width: 100%;
-            height: 600px;
+            height: 400px;
             max-width: 500px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             background-color: white;
