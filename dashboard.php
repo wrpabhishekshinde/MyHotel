@@ -1,5 +1,6 @@
 <?php
 session_start();
+include('con.php');
 include('header.php');
 checkUser();
 userArea();
