@@ -73,7 +73,7 @@ if(isset($_POST['submit'])){
          <div class="row">
             <div class="col-lg-12">
                <h2><?php echo $label?> Income</h2>
-               <a href="expense.php">Back</a>
+               <a href="income.php">Back</a>
                <div class="card">
                   <div class="card-body card-block">
                      <form method="post" class="form-horizontal">
