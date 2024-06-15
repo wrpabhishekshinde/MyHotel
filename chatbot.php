@@ -19,7 +19,7 @@ userArea();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/perfect-scrollbar/1.5.5/css/perfect-scrollbar.min.css">
     <style>
         /* Add any custom styles here */
-        body, html {
+         body, html {
             height: 100%;
             margin: 0;
             display: flex;
@@ -32,19 +32,19 @@ userArea();
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 80%;
+            height: 100%;
             width: 100%;
-            margin-right=100px;
-           
+            margin-top: 400px;
         }
         #azurebotContainer {
-            width: 80%;
-            height: 500px;
+            width: 100%;
+            height: 600px;
             max-width: 500px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             background-color: white;
             border-radius: 8px;
             overflow: hidden;
+        
         }
     </style>
 </head>
