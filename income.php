@@ -14,11 +14,13 @@ if(isset($_GET['type']) && $_GET['type'] == 'delete' && isset($_GET['id']) && $_
     $stmt = $con->prepare("DELETE FROM income WHERE id = ?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
-
-    echo "<br/>Data deleted<br/>";
-
+    
     // Close statement
     $stmt->close();
+
+    // Redirect to income.php after deletion
+    header('Location: income.php');
+    exit;
 }
 
 // Prepared statement for fetching income data joined with category name
@@ -30,9 +32,6 @@ $stmt = $con->prepare("SELECT income.id, income.amount, income.details, income.i
 $stmt->bind_param("i", $_SESSION['UID']);
 $stmt->execute();
 $result = $stmt->get_result();
-
-// Close statement
-$stmt->close();
 ?>
 
 <div class="main-content">
@@ -87,7 +86,8 @@ $stmt->close();
 </div>
 
 <?php
-// Close MySQLi connection
+// Close statement and MySQLi connection
+$stmt->close();
 $con->close();
 
 include('footer.php');
