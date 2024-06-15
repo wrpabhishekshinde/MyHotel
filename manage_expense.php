@@ -12,7 +12,7 @@ $expense_date = date("Y-m-d");
 $added_on = "";
 $label = "Add";
 
-// Include MySQLi connection with SSL
+// Include MySQLi connection
 include('con.php');
 
 if(isset($_GET['id']) && $_GET['id'] > 0){
@@ -40,9 +40,6 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
     if($row['added_by'] != $_SESSION['UID']){
         redirect('expense.php');
     }
-
-    // Close statement
-    $stmt->close();
 }
 
 if(isset($_POST['submit'])){
@@ -62,22 +59,16 @@ if(isset($_POST['submit'])){
 
     if($type == "edit"){
         $stmt = $con->prepare("UPDATE expense SET category_id = ?, price = ?, item = ?, details = ?, expense_date = ? WHERE id = ? AND added_by = ?");
-        $stmt->bind_param("idsisii", $category_id, $price, $item, $details, $expense_date, $id, $added_by);
+        $stmt->bind_param("isssiii", $category_id, $price, $item, $details, $expense_date, $id, $added_by);
         $stmt->execute();
         redirect('expense.php');
     } else {
         $stmt = $con->prepare("INSERT INTO expense (category_id, price, item, details, expense_date, added_on, added_by) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("idsisss", $category_id, $price, $item, $details, $expense_date, $added_on, $added_by);
+        $stmt->bind_param("issssss", $category_id, $price, $item, $details, $expense_date, $added_on, $added_by);
         $stmt->execute();
         redirect('expense.php');
     }
-
-    // Close statement
-    $stmt->close();
 }
-
-// Close MySQLi connection
-$con->close();
 ?>
 <script>
    setTitle("Manage Expense");
@@ -99,24 +90,24 @@ $con->close();
                         </div>
                         <div class="form-group">
                            <label class="control-label mb-1">Item/Type</label>
-                           <input type="text" name="item" required value="<?php echo htmlspecialchars($item); ?>" class="form-control" required>
+                           <input type="text" name="item" required value="<?php echo $item?>" class="form-control" required>
                         </div>
                         <div class="form-group">
                            <label class="control-label mb-1">Price</label>
-                           <input type="text" name="price" required value="<?php echo htmlspecialchars($price); ?>" class="form-control" required>
+                           <input type="text" name="price" required value="<?php echo $price?>" class="form-control" required>
                         </div>
                         <div class="form-group">
                            <label class="control-label mb-1">Details</label>
-                           <input type="text" name="details" required value="<?php echo htmlspecialchars($details); ?>" class="form-control" required>
+                           <input type="text" name="details" required value="<?php echo $details?>" class="form-control" required>
                         </div>
                         <div class="form-group">
                            <label class="control-label mb-1">Expense Date</label>
-                           <input type="date" name="expense_date" required value="<?php echo $expense_date; ?>" class="form-control" required max="<?php echo date('Y-m-d'); ?>">
+                           <input type="date" name="expense_date" required value="<?php echo $expense_date?>" class="form-control" required max="<?php echo date('Y-m-d')?>">
                         </div>
                         <div class="form-group">
                            <input type="submit" name="submit" value="Submit" class="btn btn-lg btn-info btn-block">
                         </div>
-                        <div id="msg"><?php echo $msg; ?></div>
+                        <div id="msg"><?php echo $msg?></div>
                      </form>
                   </div>
                </div>
