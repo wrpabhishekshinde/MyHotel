@@ -58,12 +58,11 @@ if(isset($_POST['submit'])){
     if(isset($_GET['id']) && $_GET['id'] > 0){
         $type = "edit";
         $id = get_safe_value($_GET['id']);
-        $sub_sql = " AND id != ?";
     }
 
     if($type == "edit"){
-        $stmt = $con->prepare("UPDATE expense SET category_id = ?, price = ?, item = ?, details = ?, expense_date = ? WHERE id = ?");
-        $stmt->bind_param("idsisi", $category_id, $price, $item, $details, $expense_date, $id);
+        $stmt = $con->prepare("UPDATE expense SET category_id = ?, price = ?, item = ?, details = ?, expense_date = ? WHERE id = ? AND added_by = ?");
+        $stmt->bind_param("idsisii", $category_id, $price, $item, $details, $expense_date, $id, $added_by);
         $stmt->execute();
         redirect('expense.php');
     } else {
@@ -89,7 +88,7 @@ $con->close();
       <div class="container-fluid">
          <div class="row">
             <div class="col-lg-12">
-               <h2><?php echo $label?>  Expense</h2>
+               <h2><?php echo $label?> Expense</h2>
                <a href="expense.php">Back</a>
                <div class="card">
                   <div class="card-body card-block">
